@@ -1,0 +1,41 @@
+---
+title: "Calculating Population Change Over Time with R"
+output: html_notebook
+---
+Population change over time of Istanbul, Turkey using given dataset:
+<br><br>Year	Population
+<br>1927	691000
+<br>1950	983000
+<br>2000	8831800
+<br>2017	15029231
+
+Technically, we should use a geometric mean to calculate population growth, but we’re using an arithmetic mean here to practice specific operators in R.
+```{r error=TRUE}
+calculate_annual_growth <- function(year_one,year_two,pop_y1, pop_y2,city) {
+  annual_growth <- (((pop_y2 - pop_y1) / pop_y1) * 100) / (year_two-year_one)
+  message <- paste("From", year_one, "to", year_two, "the population of", city, "grew by approximately", annual_growth, "% each year.")
+  print(message)
+  return(annual_growth)
+}
+# Data
+city_name<- "Istanbul, Turkery"
+pop_year <- c(1927, 1950, 2000, 2017)
+pop_value<- c(691000,983000, 8831800, 15029231)
+
+# Define Data to Variables
+pop_value_one<- pop_value[1]
+pop_value_two<- pop_value[4]
+pop_year_one<- pop_year[1]
+pop_year_two<- pop_year[4]
+
+# Calculate Annual Percentage Growth Rate
+pop_change<- pop_value_two-pop_value_one
+percentage_gr <- (((pop_change)/pop_value_one) * 100) 
+annual_gr<-percentage_gr/(pop_year_two-pop_year_one)
+
+#Retrun Calculated Annual Percentage Growth Rate
+print(annual_gr)
+#Call Function to test both are correst
+print (calculate_annual_growth(pop_year_one,pop_year_two,pop_value_one,pop_value_two,city_name))
+
+```
