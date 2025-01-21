@@ -1,0 +1,146 @@
+---
+title: "1985 Cars Finder"
+output: html-notebook
+---
+
+Examine a 1985 cars data frame and manipulate data to find the perfect car.
+
+# Load Libraries
+
+```{r message=FALSE, warning=FALSE, error=TRUE}
+# load libraries used to manipulate and read data
+library(readr)
+library(dplyr)
+
+```
+
+# Load Data
+
+```{r error=TRUE}
+# load data about 1985 cars
+cars<- read.csv('cars85.csv')
+
+```
+
+# Inspect Data
+
+```{r error=TRUE}
+# inspect data to check it imported properly
+head(cars)
+summary(cars)
+
+```
+
+#Select Relevant Information
+
+```{r error=TRUE}
+# select columns relevent information
+# remove the unecessary normalized_losses column 
+cars<- cars %>%
+  select(-normalized_losses)
+cars
+
+```
+
+# Inspect Columns
+
+```{r error=TRUE}
+# view columns
+col_names<-colnames(cars)
+print(col_names)
+```
+
+# Redefine Unclear Columns
+
+```{r error=TRUE}
+# rename column
+cars<-cars%>%
+  rename(risk_factor =symboling)
+print(colnames(cars))
+
+```
+
+# Find Cars with Good MPG
+
+```{r error=TRUE}
+# only cars exceeding 30 mpg on the highways interest you
+# define threshold
+mpg_threshold <- 30
+
+# add column
+cars<- cars%>% 
+  mutate(mpg_diff_from_threshold = (highway_mpg-mpg_threshold))
+#Check it is assigned properly
+head(cars)
+
+
+
+```
+
+```{r error=TRUE}
+# filter rows and create new dataframe with appropirate MPG
+mpg_exceeds_threshold <- cars %>%
+  filter(mpg_diff_from_threshold >0)
+head(mpg_exceeds_threshold)
+
+```
+
+# Find Cars with Highest MPG
+
+```{r error=TRUE}
+# arrange rows to find the best MPG
+mpg_exceeds_threshold<- mpg_exceeds_threshold%>%
+  arrange(desc(mpg_diff_from_threshold ))
+head(mpg_exceeds_threshold)
+
+```
+
+# Find Biggest Engine Size
+
+```{r error=TRUE}
+# order rows of cars DF by engine size
+ordered_by_engine_size<- cars %>%
+  arrange(desc(engine_size))
+head(ordered_by_engine_size)
+
+
+```
+
+# Search for Desired Make
+
+```{r error=TRUE}
+# choose make
+chosen_make <-'volkswagen'
+
+# filter rows by make
+chosen_make_details<- cars%>%
+  filter(make==chosen_make)
+head(chosen_make_details)
+
+# order filtered rows by engine size
+chosen_make_details<- chosen_make_details%>%
+  arrange(desc(engine_size))
+head(chosen_make_details)
+```
+
+# Find the Best Car
+
+```{r error=TRUE}
+#Look for the car with the desired make, good mpg and biggest engine
+#Find Cars that fit desired needs and provide all information
+best_cars_all<- cars %>% 
+   filter(make==chosen_make,mpg_diff_from_threshold >0) %>%
+   arrange(desc(engine_size)) 
+
+#Simplified DF to compare requiremnts of Vehicle
+best_cars_desired_info<-best_cars_all%>%
+  select(make,mpg_diff_from_threshold,engine_size)
+
+#Check DF
+head(best_cars_all)
+
+#Print all possible new car options
+print(best_cars_desired_info)
+```
+
+\`\`\`
